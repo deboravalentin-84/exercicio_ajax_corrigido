@@ -1,19 +1,80 @@
-```html
+:root {
+    --header-color: #01a3a4;
+    --bg-color: #eee;
+}
+
+* {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style-type: none;
+}
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercício Ajax</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Meu Github</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
+    <header>
+        <div class="container">
+            <img class="profile-avatar" id="avatar" src="https://via.placeholder.com/180x180" alt="Avatar">
+            <h1 class="profile-name" id="name">Carregando...</h1>
+            <h2 class="profile-username" id="username">@deboravalentin-84</h2>
+            
+            <ul class="numbers">
+                <li class="numbers-item">
+                    <h4>Repositórios</h4>
+                    <span id="repos">0</span>
+                </li>
+                <li class="numbers-item">
+                    <h4>Seguidores</h4>
+                    <span id="followers">0</span>
+                </li>
+                <li class="numbers-item">
+                    <h4>Seguindo</h4>
+                    <span id="following">0</span>
+                </li>
+            </ul>
+            
+            <a href="#" id="link" class="profile-link">Ver no Github</a>
+        </div>
+    </header>
 
-    <h1>Lista de Produtos</h1>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameElement = document.getElementById('name');
+            const usernameElement = document.getElementById('username');
+            const avatarElement = document.getElementById('avatar');
+            const reposElement = document.getElementById('repos');
+            const followersElement = document.getElementById('followers');
+            const followingElement = document.getElementById('following');
+            const linkElement = document.getElementById('link');
 
-    <div id="produtos"></div>
-
-    <script src="main.js"></script>
+            fetch('https://api.github.com/users/deboravalentin-84')
+                .then(function(res) {
+                    if (!res.ok) throw new Error('Erro na API');
+                    return res.json();
+                })
+                .then(function(data) {
+                    nameElement.textContent = data.name || 'Débora Valentin';
+                    usernameElement.textContent = '@' + data.login;
+                    avatarElement.src = data.avatar_url;
+                    reposElement.textContent = data.public_repos;
+                    followersElement.textContent = data.followers;
+                    followingElement.textContent = data.following;
+                    linkElement.href = data.html_url;
+                })
+                .catch(function(error) {
+                    console.error('Erro:', error);
+                    nameElement.textContent = 'Erro ao carregar';
+                });
+        });
+    </script>
 </body>
 </html>
-```
